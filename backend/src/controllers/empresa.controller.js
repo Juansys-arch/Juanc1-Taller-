@@ -1,4 +1,7 @@
 "use strict";
+import { handleErrorClient, handleErrorServer, handleSuccess } from "../utils/handleResponse.js";
+import { getEmpresaService, getEmpresasService,} from "../services/empresa.service.js";
+import { empresaQueryValidation, empresaBodyValidation } from "../validations/empresa.validation.js";
 
 export async function getempresaA(req, res) {
   try {
@@ -34,3 +37,69 @@ export async function getEmpresa(req, res) {
       error.message,
     );
   }
+}
+ 
+export async function createEmpresa(req, res) {
+  try{
+    const {error} = empresaBodyValidation.validate(req.body);
+    if(error) return handleErrorClient(res, 400, error.message);
+
+    const {nombre, direccionEmpresa, descripcionEmpresa, rutEMpresa, emailEMpresa} = req.body;
+
+    const [empresa, errorEmpresa] = await createEmpresaService({
+      nombre,
+      direccionEmpresa,
+      descripcionEmpresa,
+      rutEMpresa,
+      emailEMpresa,
+    });
+
+    if (errorEmpresa) return handleErrorClient(res, 400, errorEmpresa);
+
+    handleSuccess(res, 201, "Empresa creada", empresa);
+
+  }catch(error){ 
+    handleErrorServer(res, 500, error.message);
+  }
+}
+
+export async function updateEmpresa(req, res){
+  try{
+    const {id}=req.params;
+
+    const {error} = empresaBodyValidation.validate(req.body);
+    if(error) return handleErrorClient(res,400, error.message);
+    const {nombre,direccionEmpresa,descripcionEmpresa,rutEMpresa,emailEMpresa}=req.body;
+
+    const [empresa, errorEmpresa] = await updateEmpresaService({
+      nombre,
+      direccionEmpresa,
+      descripcionEmpresa,
+      rutEMpresa,
+      emailEMpresa,
+    });
+    if (errorEmpresa) return handleErrorClient(res, 400, errorEmpresa);
+
+    handleSuccess(res, 200, "Empresa actualizada", empresa);
+
+
+  }catch(error){
+    handleErrorServer(res, 500, error.message);
+
+  }
+}
+
+export async function deleteEmpresa(req, res){
+  try{
+    const {id}= req.params;
+
+    const [empresa, errorEmpresa]= await deleteEmpresaService(id);
+
+    if (errorEmpresa) return handleErrorClient(res, 400, errorEmpresa);
+
+    handleSuccess(res, 200, "empresa eliminada", empresa);
+
+  }catch(error){
+    handleErrorServer(res, 500, error.message);
+  }
+}
