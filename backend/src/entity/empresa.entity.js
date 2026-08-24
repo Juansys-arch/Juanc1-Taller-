@@ -25,12 +25,12 @@ const EmpresaSchema = new EntitySchema({
             length:255,
             nullable:false,
         },
-        rutEMpresa:{
+        rutEmpresa:{
             type:"varchar",
             length:12,
             nullable:false,
         },
-        emailEMpresa:{
+        emailEmpresa:{
             type:"varchar",
             length:255,
             nullable:false,
@@ -50,4 +50,4 @@ const EmpresaSchema = new EntitySchema({
 
 })
 
-export const Empresa = EmpresaSchema;
+export { EmpresaSchema };

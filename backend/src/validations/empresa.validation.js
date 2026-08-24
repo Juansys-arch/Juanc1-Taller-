@@ -42,7 +42,7 @@ export const empresaBodyValidation = Joi.object({
   .required()
   .messages({
     "string.empty": "La dirección no puede estar vacía",
-"any.required": "La dirección es obligatoria",
+    "any.required": "La dirección es obligatoria",
   }),
   descripcionEmpresa: 
   Joi.string()
@@ -59,7 +59,7 @@ export const empresaBodyValidation = Joi.object({
   .max(12)
   .required()
   .messages({
-"string.empty": "El rut no puede estar vacío",
+    "string.empty": "El rut no puede estar vacío",
     "any.required": "El rut es obligatorio",
   }),
   emailEmpresa: 
