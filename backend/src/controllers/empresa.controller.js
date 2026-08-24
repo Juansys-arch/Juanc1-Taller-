@@ -1,17 +1,15 @@
 "use strict";
-import { handleErrorClient, handleErrorServer, handleSuccess } from "../utils/handleResponse.js";
-import { getEmpresaService, getEmpresasService,} from "../services/empresa.service.js";
+import { handleErrorClient, handleErrorServer, handleSuccess } from "../handlers/responseHandlers.js";
+import { getEmpresaService, getEmpresasService, createEmpresaService, updateEmpresaService, deleteEmpresaService} from "../services/empresa.service.js";
 import { empresaQueryValidation, empresaBodyValidation } from "../validations/empresa.validation.js";
 
 export async function getempresaA(req, res) {
   try {
-    const { } = req.query;
-
-    const { error } = empresaQueryValidation.validate({ });
-
+    const {id, rutEmpresa} = req.query;
+    const { error } = empresaQueryValidation.validate({ id, rutEmpresa });
     if (error) return handleErrorClient(res, 400, error.message);
 
-    const [empresa, errorEmpresa] = await getEmpresaService({ });
+    const [empresa, errorEmpresa] = await getEmpresaService({ id, rutEmpresa });
 
     if (errorEmpresa) return handleErrorClient(res, 404, errorEmpresa);
 
@@ -25,7 +23,7 @@ export async function getEmpresa(req, res) {
   try {
     const [empresas, errorEmpresas] = await getEmpresasService();
 
-    if (errorEmpresas) return handleErrorClient(res, 404, errorUsers);
+    if (errorEmpresas) return handleErrorClient(res, 404, errorEmpresas);
 
     empresas.length === 0
       ? handleSuccess(res, 204)
@@ -44,14 +42,14 @@ export async function createEmpresa(req, res) {
     const {error} = empresaBodyValidation.validate(req.body);
     if(error) return handleErrorClient(res, 400, error.message);
 
-    const {nombre, direccionEmpresa, descripcionEmpresa, rutEMpresa, emailEMpresa} = req.body;
+    const {nombre, direccionEmpresa, descripcionEmpresa, rutEmpresa, emailEmpresa} = req.body;
 
     const [empresa, errorEmpresa] = await createEmpresaService({
       nombre,
       direccionEmpresa,
       descripcionEmpresa,
-      rutEMpresa,
-      emailEMpresa,
+      rutEmpresa,
+      emailEmpresa,
     });
 
     if (errorEmpresa) return handleErrorClient(res, 400, errorEmpresa);
@@ -69,14 +67,14 @@ export async function updateEmpresa(req, res){
 
     const {error} = empresaBodyValidation.validate(req.body);
     if(error) return handleErrorClient(res,400, error.message);
-    const {nombre,direccionEmpresa,descripcionEmpresa,rutEMpresa,emailEMpresa}=req.body;
+    const {nombre, direccionEmpresa, descripcionEmpresa, rutEmpresa, emailEmpresa}=req.body;
 
-    const [empresa, errorEmpresa] = await updateEmpresaService({
+    const [empresa, errorEmpresa] = await updateEmpresaService(id,{
       nombre,
       direccionEmpresa,
       descripcionEmpresa,
-      rutEMpresa,
-      emailEMpresa,
+      rutEmpresa,
+      emailEmpresa,
     });
     if (errorEmpresa) return handleErrorClient(res, 400, errorEmpresa);
 
